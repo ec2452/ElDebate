@@ -1,53 +1,55 @@
-# debate – News Portal
-## Programiranje web aplikacija, TVZ 2025/26
+ElDebate
 
-### Struktura projekta
+Web portal s vijestima izrađen u PHP-u i MySQL-u. Posjetitelji mogu čitati vijesti po kategorijama, a prijavljeni administratori upravljaju sadržajem kroz administracijsko sučelje.
 
-```
-debate_projekt/
-├── css/style.css           – vanjski CSS
-├── img/                    – slike vijesti
-├── connect.php             – konekcija na bazu
-├── header.php / footer.php – zajednički elementi stranice
-├── index.php               – naslovna stranica (Faza I, III)
-├── unos.html / skripta.php – forma i obrada unosa vijesti (Faza II)
-├── clanak.php              – prikaz pojedine vijesti (Faza III)
-├── kategorija.php          – prikaz vijesti po kategoriji (Faza III)
-├── administracija.php      – CRUD i prijava administratora (Faza III, V)
-├── registracija.php        – registracija korisnika (Faza V)
-└── debate_portal.sql       – export baze podataka
-```
+Projekt je izrađen u sklopu kolegija Programiranje web aplikacija na Tehničkom veleučilištu u Zagrebu (2025./26.).
 
-### Postavljanje
+Mogućnosti
+Naslovna stranica s pregledom najnovijih vijesti
+Prikaz pojedinog članka i popis vijesti po kategorijama
+Unos novih vijesti putem forme (unos.html → skripta.php)
+Administracija: dodavanje, izmjena i brisanje vijesti (CRUD)
+Registracija korisnika i prijava sa sesijama
+Tehnologije
+PHP (mysqli)
+MySQL
+HTML i CSS
+XAMPP za lokalno pokretanje (Apache + MySQL)
+Pokretanje lokalno
+Instaliraj XAMPP i pokreni Apache i MySQL.
+Kloniraj repozitorij u mapu htdocs:
+cd C:\xampp\htdocs
+git clone https://github.com/ec2452/ElDebate.git
+U phpMyAdmin (http://localhost/phpmyadmin) uvezi datoteku debate_portal.sql (Import).
+Po potrebi prilagodi podatke za spajanje na bazu u connect.php.
+Otvori http://localhost/ElDebate/.
+Administracija
 
-1. Kopirati mapu `debate_projekt` u `htdocs` (XAMPP).
-2. Pokrenuti Apache i MySQL.
-3. U phpMyAdmin uvesti `debate_portal.sql` (Import).
-4. Otvoriti `http://localhost/debate_projekt/`.
+Za testiranje je u bazi unaprijed kreiran administratorski račun:
 
-### Pristup administraciji
+Korisničko ime	Lozinka
+admin	password
 
-| Korisničko ime | Lozinka |
-|---|---|
-| `admin` | `password` |
+Ovi podaci služe samo za lokalno testiranje. Ako projekt postavljaš na pravi server, obavezno promijeni lozinku: novi hash generiraj funkcijom password_hash() i ažuriraj zapis u tablici korisnik.
 
-Za promjenu lozinke generirati novi hash funkcijom `password_hash()` i ažurirati zapis u tablici `korisnik`.
+Sigurnost
+SQL injection: upiti u administracija.php i registracija.php koriste mysqli prepared statemente.
+Lozinke: spremaju se hashirane s password_hash() (bcrypt), a provjeravaju s password_verify().
+Sesije: prijavljeni korisnik prati se kroz session_start() i $_SESSION.
+XSS: ispis podataka escapa se funkcijom htmlspecialchars().
+Struktura projekta
+ElDebate/
+├── css/style.css           – stilovi
+├── img/                    – slike uz vijesti
+├── connect.php             – spajanje na bazu
+├── header.php / footer.php – zajednički dijelovi stranice
+├── index.php               – naslovna stranica
+├── clanak.php              – prikaz pojedine vijesti
+├── kategorija.php          – vijesti po kategoriji
+├── unos.html / skripta.php – forma i obrada unosa vijesti
+├── administracija.php      – prijava administratora i CRUD
+├── registracija.php        – registracija korisnika
+└── debate_portal.sql       – izvoz baze podataka
+Autor
 
-### Faze projekta
-
-| Faza | Opis | Datoteke |
-|---|---|---|
-| I | HTML/CSS struktura | `index.php`, `css/style.css` |
-| II | HTML forma, PHP obrada | `unos.html`, `skripta.php` |
-| III | PHP/MySQL, CRUD | `index.php`, `clanak.php`, `kategorija.php`, `administracija.php` |
-| V | Sigurnost (autentikacija, sesije) | `administracija.php`, `registracija.php` |
-
-### Sigurnosne mjere
-
-- SQL injection: `mysqli` prepared statementi u `administracija.php` i `registracija.php`
-- Lozinke: hashirane funkcijom `password_hash()` (bcrypt), provjera `password_verify()`
-- Sesije: `session_start()`, podaci o prijavljenom korisniku u `$_SESSION`
-- XSS: izlazni podaci escapani funkcijom `htmlspecialchars()`
-
----
-Autor: Ema Čurla, ecurla@tvz.hr
+Ema Čurla · ecurla@tvz.hr
